@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+// JdbcTemplate 가 Spring이 제공하는 템플릿/콜백 패턴이 적용된 Jdbc 코드용 기본 템플릿
 public class JdbcContext {
     private DataSource dataSource;
 

@@ -5,15 +5,18 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Calculator {
-    public Integer calcSum(String filepath) throws IOException {
+
+    public <T> T lineReadTemplate(String filepath, LineCallback<T> callback, T initVal) throws IOException {
         BufferedReader br = null;
-        Integer sum = 0;
         try {
+            T res = initVal;
             br = new BufferedReader(new FileReader(filepath));
             String line = null;
+
             while ((line = br.readLine()) != null) {
-                sum += Integer.valueOf(line);
+                res = callback.doSomethingWithLine(line, res);
             }
+            return res;
         } catch (IOException e) {
             throw e;
         }finally {
@@ -26,32 +29,13 @@ public class Calculator {
             }
         }
 
+    }
 
-        return sum;
+    public Integer calcSum(String filepath) throws IOException {
+        return lineReadTemplate(filepath, (LineCallback<Integer>) (line, value) -> value + Integer.valueOf(line), 0);
     }
 
     public Integer calcMultiply(String filepath) throws IOException {
-        BufferedReader br = null;
-        Integer sum = 0;
-        try {
-            br = new BufferedReader(new FileReader(filepath));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sum *= Integer.valueOf(line);
-            }
-        } catch (IOException e) {
-            throw e;
-        }finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-
-
-        return sum;
+        return lineReadTemplate(filepath, (LineCallback<Integer>) (line, value) -> value * Integer.valueOf(line), 1);
     }
 }
